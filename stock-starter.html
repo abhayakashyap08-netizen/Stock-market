@@ -1,0 +1,566 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Stock Starter — Learn the basics</title>
+  <style>
+    :root {
+      --ink: #17221d;
+      --muted: #66736c;
+      --paper: #f5f7f2;
+      --card: #fff;
+      --green: #176b4b;
+      --green-dark: #104c36;
+      --mint: #dff3e8;
+      --line: #e2e9e3;
+      --orange: #f4a340;
+      --shadow: 0 12px 32px rgba(30, 57, 42, .08);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font: 16px/1.55 system-ui, -apple-system, Segoe UI, sans-serif;
+    }
+    a { color: inherit; }
+    button, input { font: inherit; }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 14px max(5vw, 20px);
+      background: rgba(255,255,255,.94);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(10px);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+    }
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 11px;
+      color: white;
+      background: var(--green);
+      font-size: 19px;
+    }
+    nav { display: flex; gap: 22px; }
+    nav a {
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 650;
+    }
+    nav a:hover { color: var(--green); }
+    .wrap { width: min(1100px, 90%); margin: auto; }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 48px;
+      align-items: center;
+      padding: 76px 0 58px;
+    }
+    .eyebrow {
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+    h1 {
+      max-width: 620px;
+      margin: 12px 0 18px;
+      font-size: clamp(40px, 6vw, 68px);
+      line-height: 1.04;
+      letter-spacing: -.055em;
+    }
+    .hero p {
+      max-width: 560px;
+      color: var(--muted);
+      font-size: 18px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 0;
+      border-radius: 10px;
+      padding: 12px 18px;
+      margin-top: 12px;
+      color: white;
+      background: var(--green);
+      text-decoration: none;
+      font-weight: 750;
+      cursor: pointer;
+    }
+    .btn:hover { background: var(--green-dark); }
+    .hero-card {
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: var(--card);
+      box-shadow: var(--shadow);
+      transform: rotate(1deg);
+    }
+    .hero-card .label { color: var(--muted); font-size: 13px; }
+    .hero-card h2 { margin: 4px 0 0; font-size: 27px; }
+    .chart { width: 100%; height: auto; margin: 12px 0 4px; }
+    .chart path {
+      fill: none;
+      stroke: var(--green);
+      stroke-width: 4;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .chart .area { fill: url(#fill); stroke: none; }
+    .chart circle { fill: var(--orange); stroke: white; stroke-width: 3; }
+    .chart-caption {
+      display: flex;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    section { padding: 42px 0; }
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 20px;
+      margin-bottom: 22px;
+    }
+    h2 {
+      margin: 0;
+      font-size: clamp(27px, 4vw, 38px);
+      line-height: 1.15;
+      letter-spacing: -.035em;
+    }
+    .section-head p {
+      max-width: 480px;
+      margin: 8px 0 0;
+      color: var(--muted);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .lesson {
+      padding: 22px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .lesson:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow);
+    }
+    .lesson-icon {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 13px;
+      background: var(--mint);
+      font-size: 21px;
+    }
+    .lesson h3 { margin: 16px 0 6px; font-size: 19px; }
+    .lesson p { margin: 0; color: var(--muted); font-size: 14px; }
+
+    .stock-card {
+      padding: 20px;
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 15px;
+    }
+    .stock-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+    .ticker {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .08em;
+    }
+    .stock-card h3 { margin: 3px 0; }
+    .stock-price { margin-top: 18px; font-size: 25px; font-weight: 800; }
+    .stock-change { color: var(--green); font-size: 13px; font-weight: 750; }
+    .demo-label { margin-top: 15px; color: var(--muted); font-size: 12px; }
+
+    .practice {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      align-items: center;
+      padding: 30px;
+      border-radius: 20px;
+      background: #183b2d;
+      color: white;
+    }
+    .practice p { color: #d2e0d7; }
+    .calculator {
+      padding: 20px;
+      color: var(--ink);
+      background: white;
+      border-radius: 15px;
+    }
+    .calculator label {
+      display: block;
+      margin: 0 0 6px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .calculator input {
+      width: 100%;
+      padding: 11px 12px;
+      margin-bottom: 14px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      outline-color: var(--green);
+    }
+    .result { padding: 13px; border-radius: 10px; background: var(--mint); }
+    .result small { display: block; color: var(--muted); }
+    .result strong { font-size: 24px; }
+
+    .quiz-card {
+      padding: 26px;
+      border: 1px solid var(--line);
+      background: white;
+      border-radius: 17px;
+    }
+    .quiz-card h3 { margin-top: 0; }
+    .answers {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .answer {
+      padding: 12px;
+      text-align: left;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: white;
+      cursor: pointer;
+    }
+    .answer:hover { border-color: var(--green); }
+    .answer.correct { border-color: #2a9b68; background: #e6f6ed; }
+    .answer.wrong { border-color: #df786b; background: #fff0ed; }
+    #quiz-feedback { min-height: 24px; margin: 14px 0 0; font-weight: 700; }
+
+    footer {
+      margin-top: 38px;
+      padding: 26px 0;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 13px;
+    }
+    footer strong { color: var(--ink); }
+
+    @media (max-width: 760px) {
+      nav { gap: 12px; }
+      nav a { font-size: 12px; }
+      .hero {
+        grid-template-columns: 1fr;
+        gap: 26px;
+        padding-top: 52px;
+      }
+      .hero-card { transform: none; }
+      .grid { grid-template-columns: 1fr; }
+      .practice { grid-template-columns: 1fr; padding: 22px; }
+      .section-head { display: block; }
+    }
+    @media (max-width: 440px) {
+      .topbar { padding-inline: 5%; }
+      nav a:nth-child(2) { display: none; }
+      .answers { grid-template-columns: 1fr; }
+      .hero p { font-size: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="brand-mark">↗</span> Stock Starter</div>
+    <nav aria-label="Main navigation">
+      <a href="#learn">Learn</a>
+      <a href="#examples">Samples</a>
+      <a href="#practice">Practice</a>
+      <a href="#quiz">Quiz</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="wrap">
+      <section class="hero">
+        <div>
+          <div class="eyebrow">Your first step into investing</div>
+          <h1>Understand stocks, one idea at a time.</h1>
+          <p>Learn what owning a stock means, see how returns can work, and try a tiny quiz. No jargon or real money needed.</p>
+          <a class="btn" href="#learn">Start learning <span aria-hidden="true">&nbsp;↓</span></a>
+        </div>
+
+        <div class="hero-card" aria-label="Illustration of a rising sample stock chart">
+          <div class="label">A made-up example</div>
+          <h2>Learning can grow 📈</h2>
+          <svg class="chart" viewBox="0 0 420 180" role="img" aria-label="A sample line rising over time">
+            <defs>
+              <linearGradient id="fill" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0%" stop-color="#bde7cf" stop-opacity=".8"/>
+                <stop offset="100%" stop-color="#bde7cf" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <path class="area" d="M10 145 C55 130 65 130 100 115 S150 120 185 89 S240 110 275 68 S330 82 365 38 S398 45 410 18 L410 170 L10 170 Z"/>
+            <path d="M10 145 C55 130 65 130 100 115 S150 120 185 89 S240 110 275 68 S330 82 365 38 S398 45 410 18"/>
+            <circle cx="410" cy="18" r="7"/>
+          </svg>
+          <div class="chart-caption"><span>Then</span><span>Later</span></div>
+        </div>
+      </section>
+
+      <section id="examples">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">Practice reading a quote</div>
+            <h2>Sample stocks</h2>
+          </div>
+          <p>These fictional companies and prices show the kinds of details you may see on a stock page.</p>
+        </div>
+        <div class="grid">
+          <article class="stock-card">
+            <div class="stock-top">
+              <div><div class="ticker">NOVA</div><h3>Nova Solar</h3></div>
+              <span>☀️</span>
+            </div>
+            <div class="stock-price">$24.80</div>
+            <div class="stock-change">+1.20% today</div>
+            <div class="demo-label">Fictional demo data</div>
+          </article>
+
+          <article class="stock-card">
+            <div class="stock-top">
+              <div><div class="ticker">PINE</div><h3>Pine Foods</h3></div>
+              <span>🌿</span>
+            </div>
+            <div class="stock-price">$51.35</div>
+            <div class="stock-change" style="color:#a14a3d">−0.45% today</div>
+            <div class="demo-label">Fictional demo data</div>
+          </article>
+
+          <article class="stock-card">
+            <div class="stock-top">
+              <div><div class="ticker">WAVE</div><h3>Wave Transit</h3></div>
+              <span>🚆</span>
+            </div>
+            <div class="stock-price">$18.10</div>
+            <div class="stock-change">+0.70% today</div>
+            <div class="demo-label">Fictional demo data</div>
+          </article>
+        </div>
+      </section>
+
+      <section id="learn">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">The essentials</div>
+            <h2>Three ideas to know</h2>
+          </div>
+          <p>Start with the building blocks. You can learn the rest as you go.</p>
+        </div>
+        <div class="grid">
+          <article class="lesson">
+            <div class="lesson-icon">🏢</div>
+            <h3>What is a stock?</h3>
+            <p>A stock is a small ownership share in a company. If you own a share, you own a tiny piece of that business.</p>
+          </article>
+
+          <article class="lesson">
+            <div class="lesson-icon">⚖️</div>
+            <h3>Price can move</h3>
+            <p>Stock prices rise and fall as people react to company results, expectations, and wider market conditions.</p>
+          </article>
+
+          <article class="lesson">
+            <div class="lesson-icon">🌱</div>
+            <h3>Think long term</h3>
+            <p>Investing involves uncertainty. Spreading investments and giving them time may help manage some risks, but never removes them.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="practice">
+        <div class="practice">
+          <div>
+            <div class="eyebrow" style="color:#9de0b9">Try a simple example</div>
+            <h2>What might a share cost?</h2>
+            <p>Choose a pretend share price and number of shares. This estimates the purchase amount before any fees or taxes.</p>
+          </div>
+
+          <div class="calculator">
+            <label for="price">Pretend price per share</label>
+            <input id="price" type="number" min="0" step="0.01" value="25" inputmode="decimal">
+
+            <label for="shares">Number of shares</label>
+            <input id="shares" type="number" min="0" step="1" value="4" inputmode="numeric">
+
+            <div class="result">
+              <small>Example total</small>
+              <strong id="total">$100.00</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="quiz">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">Quick check</div>
+            <h2>Stock basics quiz</h2>
+          </div>
+          <p>Answer all six questions to see your score.</p>
+        </div>
+
+        <div class="quiz-card">
+          <div id="quiz-box"></div>
+          <p id="quiz-feedback" aria-live="polite">Your score: 0 / 6</p>
+          <button class="btn" id="restart-quiz" type="button">Start again</button>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <strong>Stock Starter</strong> · An educational demo. Examples are fictional and this page is not financial advice.
+    </div>
+  </footer>
+
+  <script>
+    const priceInput = document.querySelector("#price");
+    const sharesInput = document.querySelector("#shares");
+    const totalOutput = document.querySelector("#total");
+
+    function updateTotal() {
+      const price = Math.max(0, Number(priceInput.value) || 0);
+      const shares = Math.max(0, Number(sharesInput.value) || 0);
+
+      totalOutput.textContent = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD"
+      }).format(price * shares);
+    }
+
+    priceInput.addEventListener("input", updateTotal);
+    sharesInput.addEventListener("input", updateTotal);
+
+    const questions = [
+      {
+        q: "What does one share represent?",
+        options: ["A small ownership share", "A guaranteed profit", "A loan to a bank", "A savings account"],
+        answer: 0
+      },
+      {
+        q: "Why can a stock's price change?",
+        options: ["It never changes", "Buyers and sellers react to information", "The company chooses every trade price", "It changes only once a year"],
+        answer: 1
+      },
+      {
+        q: "What is a dividend?",
+        options: ["A stock market building", "A fee for opening an account", "Some company profit paid to shareholders", "The original stock price"],
+        answer: 2
+      },
+      {
+        q: "What does diversification mean?",
+        options: ["Buying only one company", "Trying to spread investments across different assets", "Selling every stock each day", "Choosing the most expensive share"],
+        answer: 1
+      },
+      {
+        q: "Can investing in stocks lose money?",
+        options: ["No, never", "Only on weekends", "Yes, prices can fall", "Only if a company pays dividends"],
+        answer: 2
+      },
+      {
+        q: "What does the ticker NOVA represent in the sample cards?",
+        options: ["A fictional stock symbol", "A real-time price guarantee", "A type of dividend", "A stock exchange"],
+        answer: 0
+      }
+    ];
+
+    const quizBox = document.querySelector("#quiz-box");
+    const feedback = document.querySelector("#quiz-feedback");
+    let score = 0;
+    let answered = 0;
+
+    questions.forEach((item, questionIndex) => {
+      const block = document.createElement("div");
+      block.innerHTML = `<h3>${questionIndex + 1}. ${item.q}</h3>`;
+
+      const answers = document.createElement("div");
+      answers.className = "answers";
+
+      item.options.forEach((option, optionIndex) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "answer";
+        button.textContent = option;
+
+        button.addEventListener("click", () => {
+          if (answers.dataset.answered) return;
+
+          answers.dataset.answered = "true";
+          answered++;
+
+          const isCorrect = optionIndex === item.answer;
+          if (isCorrect) score++;
+
+          button.classList.add(isCorrect ? "correct" : "wrong");
+
+          if (!isCorrect) {
+            answers.children[item.answer].classList.add("correct");
+          }
+
+          feedback.textContent = answered === questions.length
+            ? `Quiz complete! Your score: ${score} / ${questions.length}`
+            : `Your score: ${score} / ${questions.length} · ${answered} of ${questions.length} answered`;
+        });
+
+        answers.appendChild(button);
+      });
+
+      block.appendChild(answers);
+      quizBox.appendChild(block);
+    });
+
+    document.querySelector("#restart-quiz").addEventListener("click", () => {
+      score = 0;
+      answered = 0;
+
+      quizBox.querySelectorAll(".answers").forEach((answers) => {
+        delete answers.dataset.answered;
+        answers.querySelectorAll(".answer").forEach((button) => {
+          button.classList.remove("correct", "wrong");
+        });
+      });
+
+      feedback.textContent = "Your score: 0 / 6";
+    });
+  </script>
+</body>
+</html>
